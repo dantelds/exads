@@ -1,7 +1,9 @@
 <?php
 
 class ExadsTestHelper {
-
+    private static $user = 'root';
+    private static $password = '';
+    
     static function fizzBuzz() {
         $fizzBuzzArray = [];
         for ($i = 1; $i <= 100; $i++) {
@@ -16,6 +18,14 @@ class ExadsTestHelper {
             }
         }
         return $fizzBuzzArray;
+    }
+    
+    private static function createDatabaseConnection(){
+         try {
+            return new PDO('mysql:host=127.0.0.1:3306;dbname=exads', self::$user, self::$password);
+         } catch (PDOException $e) {
+            die($e->getMessage());
+        }
     }
 
     static function arrayWith500Elements() {
@@ -32,7 +42,7 @@ class ExadsTestHelper {
 
     static public function dataBaseConnectivity() {
         try {
-            $dbConnection = new PDO('mysql:host=127.0.0.1:3306;dbname=exads', 'root', '');
+            $dbConnection = self::createDatabaseConnection();
             $selectQuery = $dbConnection->prepare("SELECT name,age,job_title FROM exads_test");
             $selectQuery->execute();
             $results = $selectQuery->fetchAll();
@@ -60,8 +70,8 @@ class ExadsTestHelper {
     
     static function ABTesting(){
         try {
-            $dbConnection = new PDO('mysql:host=127.0.0.1:3306;dbname=exads', 'root', '');
-            $selectQuery = $dbConnection->prepare("SELECT design_id,design_name,split_percent FROM design");
+            $dbConnection = self::createDatabaseConnection();
+            $selectQuery = $dbConnection->prepare("SELECT design_name,split_percent FROM design");
             $selectQuery->execute();
             $designs = $selectQuery->fetchAll();
             $chosenDesign = rand(1, 100);

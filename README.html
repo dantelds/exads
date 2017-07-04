@@ -1,5 +1,22 @@
-in this function you have to check the numbers one on one, so you have to create
-a bucle in order to check each number and set the value for each element.
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <title>Exads Readme</title>        
+        <!-- Bootstrap core CSS -->
+        <link href="./css/bootstrap.min.css" rel="stylesheet">
+    </head>
+    <body>
+        <div class="container">
+            <p>to run the test use the command:
+                <br/>
+                phpunit --bootstrap ./helpers/ExadsTestHelper.php --testdox test
+            </p>
+            <p>
+                in this function you have to check the numbers one on one, so you have to create
+                a bucle in order to check each number and set the value for each element.
+            <p>
+            <pre>
     static function fizzBuzz() {
         $fizzBuzzArray = [];
         for ($i = 1; $i <= 100; $i++) {
@@ -15,11 +32,15 @@ a bucle in order to check each number and set the value for each element.
         }
         return $fizzBuzzArray;
     }
-you have to create an array with 500 elements, you use the range function to 
-create it, then you order randomly the array and unset a random element from the array,
-in order to get the deleted number, you create another array exactly the same,
-you have to sum all the elements in the array and then subtract the complete array with
-the array with the removed element and as result you will get the deleted element.
+            </pre>
+            <p>
+                you have to create an array with 500 elements, you use the range function to 
+                create it, then you order randomly the array and unset a random element from the array,
+                in order to get the deleted number, you create another array exactly the same,
+                you have to sum all the elements in the array and then subtract the complete array with
+                the array with the removed element and as result you will get the deleted element.
+            </p>
+            <pre>
     static function arrayWith500Elements() {
         $arrayWith500Elements = range(1, 500);
         shuffle($arrayWith500Elements);
@@ -31,13 +52,15 @@ the array with the removed element and as result you will get the deleted elemen
         $missingElement = array_sum(range(1, 500)) - array_sum($arrayWith500Elements);
         return $missingElement;
     }
-
-you create a connection to the bbdd with PDO, and in order to insert a sanitised record
-you use the methods for set the values.
-
+            </pre>
+            <p>
+                you create a connection to the bbdd with PDO, and in order to insert a sanitised record
+                you use the methods for set the values.
+            </p>
+            <pre>
     static public function dataBaseConnectivity() {
         try {
-            $dbConnection = new PDO('mysql:host=127.0.0.1:3306;dbname=exads', 'root', '');
+            $dbConnection = self::createDatabaseConnection();
             $selectQuery = $dbConnection->prepare("SELECT name,age,job_title FROM exads_test");
             $selectQuery->execute();
             $results = $selectQuery->fetchAll();
@@ -52,11 +75,15 @@ you use the methods for set the values.
             die($e->getMessage());
         }
     }
-in order to get the next draw date you create your current date, then duplicate 
-the date for the wednesday draw and for the saturday draw replacing the days of the date
-then you check if your date is sooner than the wednesday draw if that condition is true the next
-draw is on saturday and if the condition is false you receive the saturday date,
- also is the same if you want to setup a date
+            </pre>
+            <p>
+                in order to get the next draw date you create your current date, then duplicate 
+                the date for the wednesday draw and for the saturday draw replacing the days of the date
+                then you check if your date is sooner than the wednesday draw if that condition is true the next
+                draw is on saturday and if the condition is false you receive the saturday date,
+                also is the same if you want to setup a date
+            </p>
+            <pre>
     static public function dateCalculation($specifDate = null){
         $currentDate = new DateTime($specifDate);
         $currentDate->modify('this day 20:00');
@@ -66,14 +93,18 @@ draw is on saturday and if the condition is false you receive the saturday date,
         $saturdayDraw->modify(('saturday 20:00'));
         return $currentDate < $wednesdayDraw ? $wednesdayDraw : $saturdayDraw;
     }
-in order to show different designs you have to get your designs from the database,
-then you take the split percent of each designs and sum the values of the elements
-saving the current value in a variable, then you create a random number between 1 and 100,
-if the current sum is bigger than the random number you will receive 
-your design
+            </pre>
+            <p>
+                in order to show different designs you have to get your designs from the database,
+                then you take the split percent of each designs and sum the values of the elements
+                saving the current value in a variable, then you create a random number between 1 and 100,
+                if the current sum is bigger than the random number you will receive 
+                your design
+            </p>
+            <pre>
     static function ABTesting(){
         try {
-            $dbConnection = new PDO('mysql:host=127.0.0.1:3306;dbname=exads', 'root', '');
+            $dbConnection = self::createDatabaseConnection();
             $selectQuery = $dbConnection->prepare("SELECT design_id,design_name,split_percent FROM design");
             $selectQuery->execute();
             $designs = $selectQuery->fetchAll();
@@ -90,3 +121,7 @@ your design
             die($e->getMessage());
         }
     }
+            </pre>
+        </div>
+    </body>
+</html>
