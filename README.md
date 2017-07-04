@@ -1,0 +1,92 @@
+in this function you have to check the numbers one on one, so you have to create
+a bucle in order to check each number and set the value for each element.
+    static function fizzBuzz() {
+        $fizzBuzzArray = [];
+        for ($i = 1; $i <= 100; $i++) {
+            if ($i % 3 === 0 && $i % 5 === 0) {
+                array_push($fizzBuzzArray, "FizzBuzz");
+            } else if ($i % 3 === 0) {
+                array_push($fizzBuzzArray, "Fizz");
+            } else if ($i % 5 === 0) {
+                array_push($fizzBuzzArray, "Buzz");
+            } else {
+                array_push($fizzBuzzArray, $i);
+            }
+        }
+        return $fizzBuzzArray;
+    }
+you have to create an array with 500 elements, you use the range function to 
+create it, then you order randomly the array and unset a random element from the array,
+in order to get the deleted number, you create another array exactly the same,
+you have to sum all the elements in the array and then subtract the complete array with
+the array with the removed element and as result you will get the deleted element.
+    static function arrayWith500Elements() {
+        $arrayWith500Elements = range(1, 500);
+        shuffle($arrayWith500Elements);
+        unset($arrayWith500Elements[rand(0, 499)]);
+        /*
+         * the sum of both arrays are the same
+         * if you subtract the sum of both array you gonna have the removed element
+         */
+        $missingElement = array_sum(range(1, 500)) - array_sum($arrayWith500Elements);
+        return $missingElement;
+    }
+
+you create a connection to the bbdd with PDO, and in order to insert a sanitised record
+you use the methods for set the values.
+
+    static public function dataBaseConnectivity() {
+        try {
+            $dbConnection = new PDO('mysql:host=127.0.0.1:3306;dbname=exads', 'root', '');
+            $selectQuery = $dbConnection->prepare("SELECT name,age,job_title FROM exads_test");
+            $selectQuery->execute();
+            $results = $selectQuery->fetchAll();
+            $person = ["name" => "John Doe", "age" => 20, "job_title" => "salesman"];
+            $insertQuery = $dbConnection->prepare("INSERT INTO exads_test (name,age,job_title) VALUES (:name,:age,:job_title);");
+            $insertQuery->bindParam(":name", $person["name"], PDO::PARAM_STR, 255);
+            $insertQuery->bindParam(":age", $person["age"], PDO::PARAM_INT, 3);
+            $insertQuery->bindParam(":job_title", $person["job_title"], PDO::PARAM_STR, 255);
+            $insertQuery->execute();
+            return $results;
+        } catch (PDOException $e) {
+            die($e->getMessage());
+        }
+    }
+in order to get the next draw date you create your current date, then duplicate 
+the date for the wednesday draw and for the saturday draw replacing the days of the date
+then you check if your date is sooner than the wednesday draw if that condition is true the next
+draw is on saturday and if the condition is false you receive the saturday date,
+ also is the same if you want to setup a date
+    static public function dateCalculation($specifDate = null){
+        $currentDate = new DateTime($specifDate);
+        $currentDate->modify('this day 20:00');
+        $wednesdayDraw = clone $currentDate;
+        $saturdayDraw = clone $currentDate;
+        $wednesdayDraw->modify(('wednesday 20:00'));
+        $saturdayDraw->modify(('saturday 20:00'));
+        return $currentDate < $wednesdayDraw ? $wednesdayDraw : $saturdayDraw;
+    }
+in order to show different designs you have to get your designs from the database,
+then you take the split percent of each designs and sum the values of the elements
+saving the current value in a variable, then you create a random number between 1 and 100,
+if the current sum is bigger than the random number you will receive 
+your design
+    static function ABTesting(){
+        try {
+            $dbConnection = new PDO('mysql:host=127.0.0.1:3306;dbname=exads', 'root', '');
+            $selectQuery = $dbConnection->prepare("SELECT design_id,design_name,split_percent FROM design");
+            $selectQuery->execute();
+            $designs = $selectQuery->fetchAll();
+            $chosenDesign = rand(1, 100);
+            $percentSum = 0;
+            for($i = 0; $i < count($designs); $i++){
+                $percentSum += $designs[$i]["split_percent"];
+                if($percentSum > $chosenDesign){
+                    return $designs[$i]['design_name'];
+                }            
+            }
+           
+        } catch (PDOException $e) {
+            die($e->getMessage());
+        }
+    }
